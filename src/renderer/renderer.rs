@@ -6,6 +6,7 @@ use crate::renderer::vertex_array::VertexArray;
 pub struct Renderer {
     program: ShaderProgram,
     vbo: Buffer,
+    ibo: Buffer,
     vao: VertexArray,
 }
 
@@ -17,20 +18,29 @@ impl Renderer {
             let program = ShaderProgram::new(&[vertex_shader, fragment_shader])?;
 
             let vertex_buffer = Buffer::new(gl::ARRAY_BUFFER);
+            let element_buffer = Buffer::new(gl::ELEMENT_ARRAY_BUFFER);
 
             let vertex_array = VertexArray::new();
 
             Ok(Self {
                 program,
                 vbo: vertex_buffer,
+                ibo: element_buffer,
                 vao: vertex_array,
             })
         }
     }
 
     pub fn upload_vbo_data(&self, data: &[f32]) {
-        unsafe{
-        self.vbo.set_data(data, gl::STATIC_DRAW);
+        unsafe {
+            self.vbo.set_data(data, gl::STATIC_DRAW);
+        }
+    }
+
+    pub fn upload_ibo_data(&self, data: &[u32]) {
+        unsafe {
+            self.vao.bind();
+            self.ibo.set_data(data, gl::STATIC_DRAW);
         }
     }
 
@@ -55,7 +65,7 @@ impl Renderer {
             gl::Clear(gl::COLOR_BUFFER_BIT);
             self.program.bind();
             self.vao.bind();
-            gl::DrawArrays(gl::TRIANGLES, 0, 3);
+            gl::DrawElements(gl::TRIANGLES, 6, gl::UNSIGNED_INT, std::ptr::null());
         }
     }
 }

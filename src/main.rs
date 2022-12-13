@@ -24,17 +24,26 @@ fn main() {
     gl::load_with(|ptr| gl_context.get_proc_address(ptr) as *const _);
 
     #[rustfmt::skip]
-    let vertices: [f32; 15] = [
-        -0.5, -0.5, 1.0, 0.0, 0.0,
-        0.5, -0.5, 0.0, 1.0, 0.0, 
-        0.0, 0.5, 0.0, 0.0, 1.0,
+    let vertices: [f32; 20] = [
+        -0.5, -0.5, 1.0, 0.0, 0.0, //BL
+        0.5, -0.5, 1.0, 1.0, 0.0, //BR
+        -0.5, 0.5, 0.0, 1.0, 0.0, //TL
+        0.5, 0.5, 0.0, 0.0, 1.0, //TR
+    ];
+
+    #[rustfmt::skip]
+    let indices: [u32; 6] = [
+        2, 0, 1,
+        2, 3, 1,
     ];
 
     let renderer = Renderer::new().expect("Cannot create renderer");
     renderer.upload_vbo_data(&vertices);
+    renderer.upload_ibo_data(&indices);
+
     renderer.set_vao_attrib(0, 2, 5, 0);
     renderer.set_vao_attrib(1, 3, 5, 2);
-    
+
     event_loop.run(move |event, _, control_flow| {
         *control_flow = ControlFlow::Wait;
 
