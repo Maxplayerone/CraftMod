@@ -1,5 +1,6 @@
 use gl::types::*;
 use std::ffi::{CString, NulError};
+use std::fs;
 use std::ptr;
 use std::string::FromUtf8Error;
 use thiserror::Error;
@@ -29,8 +30,10 @@ impl Drop for Shader {
 }
 
 impl Shader {
-    pub unsafe fn new(source_code: &str, shader_type: GLenum) -> Result<Self, ShaderError> {
-        let source_code = CString::new(source_code)?;
+    pub unsafe fn new(filepath: &str, shader_type: GLenum) -> Result<Self, ShaderError> {
+        let src = fs::read_to_string(filepath).expect("Cannot read from the filepath");
+
+        let source_code = CString::new(src.as_bytes())?;
         let shader = Self {
             id: gl::CreateShader(shader_type),
         };

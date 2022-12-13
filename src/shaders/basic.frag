@@ -1,6 +1,8 @@
 #version 330
-out fragColor;
+out vec4 FragColor;
 
-void main(){
-    fragColor = vec4(0.8, 0.4, 0.5, 1.0);
+in vec3 f_Color;
+
+void main() {
+    FragColor = vec4(f_Color, 1.0);
 }

@@ -48,7 +48,7 @@ impl ShaderProgram {
         }
     }
 
-    pub unsafe fn apply(&self) {
+    pub unsafe fn bind(&self) {
         gl::UseProgram(self.id);
     }
 
