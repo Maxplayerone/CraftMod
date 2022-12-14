@@ -1,4 +1,5 @@
 use gl::types::*;
+use std::os::raw::c_void;
 
 pub struct VertexArray {
     pub id: GLuint,
@@ -33,7 +34,7 @@ impl VertexArray {
             gl::FLOAT,
             gl::FALSE,
             (vertex_size * std::mem::size_of::<GLfloat>()) as GLint,
-            std::mem::transmute(offset * std::mem::size_of::<GLfloat>()),
+            (offset * std::mem::size_of::<GLfloat>()) as *const c_void,
         );
         gl::EnableVertexAttribArray(attrib_pos);
     }

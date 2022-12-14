@@ -2,7 +2,7 @@
 name = "craft_mod"
 version = "0.1.0"
 edition = "2021"
-#1h 50 min
+#3.5h
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -10,3 +10,5 @@ edition = "2021"
 glutin = "0.24"
 gl = "0.14"
 thiserror = "1.0"
+cgmath = "0.16.1"
+image = "0.24.5"
