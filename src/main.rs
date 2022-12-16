@@ -6,6 +6,9 @@ use glutin::event_loop::{ControlFlow, EventLoop};
 use glutin::window::WindowBuilder;
 use glutin::{Api, ContextBuilder, GlRequest};
 
+mod utils;
+use crate::utils::math;
+
 fn main() {
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new().with_title("Learn OpenGL with Rust");
@@ -68,7 +71,7 @@ fn main() {
         -0.5,  0.5, -0.5,  0.0, 1.0
    ];
 
-   /*
+    /*
     #[rustfmt::skip]
     let indices: [u32; 6] = [
         2, 0, 1,
