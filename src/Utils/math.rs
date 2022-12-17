@@ -1,8 +1,36 @@
+use std::ops::Sub;
+use std::ops::Add;
+
 #[derive(Debug)]
 pub struct Vec3 {
     pub x: f32,
     pub y: f32,
     pub z: f32,
+}
+
+
+impl Sub for Vec3 {
+    type Output = Self;
+
+    fn sub(self, other: Self) -> Self::Output {
+        Self {
+            x: self.x - other.x,
+            y: self.y - other.y,
+            z: self.z - other.z,
+        }
+    }
+}
+
+impl Add for Vec3 {
+    type Output = Self;
+
+    fn add(self, other: Self) -> Self {
+        Self {
+            x: self.x + other.x,
+            y: self.y + other.y,
+            z: self.z + other.z,
+        }
+    }
 }
 
 impl Vec3 {
@@ -14,12 +42,36 @@ impl Vec3 {
         }
     }
 
+    pub fn sub(first: &Vec3, second: &Vec3) -> Self{
+        Self{
+            x: first.x - second.x,
+            y: first.y - second.y,
+            z: first.z - second.z,
+        }
+    }
+
+    pub fn add(first: &Vec3, second: &Vec3) -> Self{
+        Self{
+            x: first.x + second.x,
+            y: first.y + second.y,
+            z: first.z + second.z,
+        }
+    }
+
     pub fn normalize(&mut self) -> Vec3{
         let mag = (self.x * self.x + self.y * self.y + self.z * self.z).sqrt();
         Vec3{
         x: self.x / mag,
         y: self.y / mag,
         z: self.z / mag,
+        }
+    }
+
+    pub fn cross(first: &Vec3, second: &Vec3) -> Vec3{
+        Vec3{
+            x: first.y * second.z - first.z * second.y,
+            y: first.z * second.x - first.x * second.z,
+            z: first.x * second.y - first.y * second.x,
         }
     }
 }
@@ -40,14 +92,6 @@ impl Vec4 {
             z: z,
             w: w,
         }
-    }
-
-    pub fn normalize(&mut self){
-        let mag = (self.x * self.x + self.y * self.y + self.z * self.z + self.w * self.w).sqrt();
-        self.x = self.x / mag;
-        self.y = self.y / mag;
-        self.z = self.z / mag;
-        self.w = self.w / mag;
     }
 }
 
@@ -92,7 +136,28 @@ impl Mat4{
         self.mat[10] = one_minus_c * axis_normalized.z * axis_normalized.z + c;
     }
 
-    
+    pub fn look_at(&mut self, pos: &Vec3, target: &Vec3, world_up: &Vec3){
+        let dir = Vec3::sub(pos, target).normalize();
+        let right = Vec3::cross(&world_up, &dir).normalize();
+        let up = Vec3::cross(&dir, &right).normalize();
+
+        self.mat[0] = right.x;
+        self.mat[1] = right.y;
+        self.mat[2] = right.z;
+        self.mat[4] = up.x;
+        self.mat[5] = up.y;
+        self.mat[6] = up.z;
+        self.mat[8] = dir.x;
+        self.mat[9] = dir.y;
+        self.mat[10] = dir.z;
+
+        //translation
+        self.mat[12] = -pos.x;
+        self.mat[13] = -pos.y;
+        self.mat[14] = -pos.z;
+    }
+
+    /*
         pub fn perspective(&mut self, fov: f32, aspect_ratio: f32, near: f32, far: f32){
             //asserts
             let f = (fov / 2.0).tan().recip();
@@ -101,4 +166,5 @@ impl Mat4{
             self.mat[10] = (far + near) / (near - far);
             self.mat[14] = (2.0 * far * near) / (near - far); 
         }
+        */
 }

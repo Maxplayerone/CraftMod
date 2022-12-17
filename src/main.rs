@@ -7,7 +7,6 @@ use glutin::window::WindowBuilder;
 use glutin::{Api, ContextBuilder, GlRequest};
 
 mod utils;
-use crate::utils::math;
 
 fn main() {
     let event_loop = EventLoop::new();

@@ -6,7 +6,7 @@ use crate::renderer::vertex_array::VertexArray;
 
 extern crate cgmath;
 use cgmath::prelude::*;
-use cgmath::{perspective, vec3, Deg, Matrix4, Rad};
+use cgmath::{perspective, Deg, Matrix4};
 
 use std::ffi::CStr;
 use std::path::Path;
@@ -58,9 +58,13 @@ impl Renderer {
 
             let mut model = math::Mat4::new(1.0);
             model.rotate(math::Vec3::new(0.5, 1.0, 0.0).normalize(), 32.0);
-
-            let mut view = math::Mat4::new(1.0);
-            view.translate(math::Vec3::new(0.0, 0.0, -3.0));
+            
+            let mut view = math::Mat4::new(1.0);                     
+            view.look_at(
+                &math::Vec3::new(0.0, 0.0, 3.0),
+                &math::Vec3::new(0.0, 0.0, 0.0),
+                &math::Vec3::new(0.0, 1.0, 0.0),
+            );          
 
             let projection: Matrix4<f32> =
               perspective(Deg(45.0), SCR_WDITH as f32 / SCR_HEIGHT as f32, 0.1, 100.0);
